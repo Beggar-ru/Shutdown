@@ -1,43 +1,62 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 #include <cstdio>
 #include <windows.h>
+#include <chrono>
+#include <thread>
 
 using namespace std;
+void shutdownPC(int seconds) {
+    cout << "Выключение через: " << seconds << endl;
+    string commandOFF = "shutdown /s /t " + to_string(seconds);
+    system(commandOFF.c_str());
+}
 
 int main()
 {
     setlocale(LC_ALL, "ru");
-    int minuts = 0, seccond = 0;
-    
-    string choice;
+
+    int minuts = 0, seconds = 0;
 
     int stat;
-    cout << "Выберите действие:" << endl << "1.Выключение ПК." << endl << "2.Отмена выключения ПК." << endl << "3.Закрыть." << endl << ">> ";
-    cin >> stat;
+
+    bool shutdown = false;
 
     while (true) {
-        if (stat == 1) {
-            cout << "Введите время до выключения: ";
-            cin >> minuts;
-            seccond = minuts * 60;
-            string command = "shutdown /s /t " + to_string(seccond);
-            system(command.c_str());
+
+        cout << "Выберите действие: \n1.Выключение ПК. \n2.Отмена выключения ПК. \n3.Закрыть. \n>> ";
+        cin >> stat;
+
+        switch (stat) {
+        case 1:
+            if (!shutdown) {
+                cout << "Введите время до выключения: \n>> ";
+                cin >> minuts;
+                seconds = minuts * 60;
+                shutdown = true;
+                thread(shutdownPC, seconds).detach();
+            }
+            else {
+                cout << "Таймер уже установлен.\n";
+            }
             break;
-        }
-        if (stat == 2) {
-            cout << "Отмена выключения...";
-            string command1 = "shutdown /a";
-            system(command1.c_str());
+        case 2:
+            if (shutdown) {
+                shutdown = false;
+                string cancel_shutdown = "shutdown /a";
+                system(cancel_shutdown.c_str());
+                cout << "Выключение отменено.\n";
+            }
+            else {
+                cout << "Нет запланированого выключения.\n";
+            }
             break;
-        }
-        if (stat == 3) {
+        case 3: {
             return 0;
         }
-        else {
-            cout << "Выбрано неверное действие.";
+        default:
+            cout << "Неверный выбор.\n";
             break;
         }
     }
-    return 0;
 }
