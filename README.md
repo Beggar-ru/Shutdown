@@ -7,3 +7,4 @@ version 0.3
 updates:
 
 - a loop with the ability to exit has been created (previously, the program would stop working at any final result)
+- added the ability to select an action
