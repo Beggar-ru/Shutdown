@@ -6,6 +6,7 @@
 #include <thread>
 
 using namespace std;
+
 void shutdownPC(int seconds) {
     cout << "Выключение через: " << seconds << endl;
     string commandOFF = "shutdown /s /t " + to_string(seconds);
